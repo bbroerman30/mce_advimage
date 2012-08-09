@@ -1,0 +1,23 @@
+#src_list, #over_list, #out_list {width:280px;}
+.mceActionPanel {margin-top:7px;}
+.alignPreview {border:1px solid #000; width:140px; height:140px; overflow:hidden; padding:5px;}
+.checkbox {border:0;}
+.panel_wrapper div.current {height:305px;}
+#prev {margin:0; border:1px solid #000; width:428px; height:150px; overflow:auto;}
+#align, #classlist {width:150px;}
+#width, #height {vertical-align:middle; width:50px; text-align:center;}
+#vspace, #hspace, #border {vertical-align:middle; width:30px; text-align:center;}
+#class_list {width:180px;}
+input {width: 280px;}
+#constrain, #onmousemovecheck {width:auto;}
+#id, #dir, #lang, #usemap, #longdesc {width:200px;}
+a:hover { cursor:hand;}
+.selected {background-color:#66DDCC;}
+.filemgrpopupmenu { border:thin solid red; width:70px; height:90px; left:0px top:0px; position:absolute; z-index:300050; background-color:#FFFFFF; padding:5px; padding-top:0px; display:none;}
+.filemgrpopupmenu a { height:13px; margin-top: 5px; display:block; }
+.filemgrpopupmenu a:hover {background-color:#66DDCC;}
+.filemgrpopupmenu #filemgrpopupcut { padding-left: 19px; background-image: url('../img/cutb16.png'); background-repeat: no-repeat; background-position:left;}
+.filemgrpopupmenu #filemgrpopupcopy { padding-left: 19px; background-image: url('../img/documentsorcopy16.png'); background-repeat:no-repeat; background-position:left;}
+.filemgrpopupmenu #filemgrpopuppaste { padding-left: 19px; background-image: url('../img/pastfile16.png'); background-repeat:no-repeat; background-position:left;}
+.filemgrpopupmenu #filemgrpopupdelete { padding-left: 19px; background-image: url('../img/delete16.png'); background-repeat:no-repeat; background-position:left;}
+.filemgrpopupmenu #filemgrpopuprename { padding-left: 19px; background-image: url('../img/refresh16.png'); background-repeat:no-repeat; background-position:left;}
