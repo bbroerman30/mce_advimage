@@ -16,9 +16,13 @@ with it. The file filemgr.php should be moved outside the doc root, as it
 should contain the FTP username and password for uploads. You will need
 to update the path definitions inside (at the top of) ftpauthserver.php<br>
 <br>
+Also, most likely, you will want to re-sign the JAR file. I currently have it signed with a 
+self-signed certificate. While this may be good enought for your personal use, it probably wouldn't be
+good for production sites.  Additionally, the applet does not work well with Java 1.7.<br>
+<br>
 For more information on FTPApplet and SFTPApplet see the respective GIT repositories at
 https://github.com/bbroerman30/FTPApplet and https://github.com/bbroerman30/SFTPApplet
 <br>
-Portions are Copyright © 2003-2008, Moxiecode Systems AB.<br>
+Portions are Copyright ï¿½ 2003-2008, Moxiecode Systems AB.<br>
 Portions are Copyright 2009, Brad Broerman<br>
 <br>
