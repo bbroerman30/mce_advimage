@@ -21,8 +21,10 @@ self-signed certificate. While this may be good enought for your personal use, i
 good for production sites.  Additionally, the applet does not work well with Java 1.7.<br>
 <br>
 For more information on FTPApplet and SFTPApplet see the respective GIT repositories at
-https://github.com/bbroerman30/FTPApplet and https://github.com/bbroerman30/SFTPApplet
+https://github.com/bbroerman30/FTPApplet and https://github.com/bbroerman30/SFTPApplet<br>
 <br>
-Portions are Copyright � 2003-2008, Moxiecode Systems AB.<br>
+For a working demo, please check out <a href='http://www.bbroerman.net/tinymce1.html'> This Link </a>
+<br>
+Portions are Copyright 2003-2008, Moxiecode Systems AB.<br>
 Portions are Copyright 2009, Brad Broerman<br>
 <br>
