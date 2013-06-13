@@ -1,25 +1,24 @@
 <?php
 
-    $ftpRoot = "/www/bbroerman.net/secure_images/temp";             // Where the FTP'd files will be (full pathname) 
-    $tempUploadFolder = "/secure_images/temp";                      // Again, where they will be, but this time path relative to FTP user.
-    $tempCutPasteFolder = "/tmp/imagecutbuffer";                    // Where files wait after cut, before paste.
-    $ImageFolder = "/www/bbroerman.net/htdocs/albumimgs/mce_test";  // Full pathname for the base (root) directory of the images folder.
-    $ImageFolderHttpAddr = "/albumimgs/mce_test";                   // Relative or absolute URL of the images folder for web.
-        
+    $ftpRoot = "/www/sites/bbroerman.net";          // Where the FTP'd files will be (full pathname) 
+    $tempUploadFolder = "/secure_images/temp";                          // Again, where they will be, but this time path relative to FTP user.
+    $tempCutPasteFolder = "\tmp\imagecutbuffer";          // Where files wait after cut, before paste.
+    $ImageFolder = "/www/sites/bbroerman.net/htdocs/albumimgs/mce_test"; // Full pathname for the base (root) directory of the images folder.
+    $ImageFolderHttpAddr = "/albumimgs/mce_test";                  // Relative or absolute URL of the images folder for web.
     $FILE_FILTERS = Array( 'Image Files' => Array( 'png', 'jpg', 'jpeg', 'gif' ) );
         
-    require_once('pclzip.lib.php');                                 // used to process ZIP files.
-    require_once('/path/to/your/include/dir/filemgr.php');          // Contains defined constants for FTP user name (MCE_FTP_USER) and password (MCE_FTP_PASSWD)... outside document path.
+    require_once('pclzip.lib.php');                       // used to process ZIP files.
+    require_once('/www/sites/bbroerman.net/etc/filemgr.php');   // Contains definitions for FTP user name and password... outside doc path.
 
     session_start();
 
     //
     // Try to prevent session fixation attack.
     //
-    if (!isset($_SESSION['somecrazywierdkeysessionfixationcheck']))
+    if (!isset($_SESSION['bbphotoinitiated']))
     {
         session_regenerate_id();
-        $_SESSION['somecrazywierdkeysessionfixationcheck'] = true;
+        $_SESSION['bbphotoinitiated'] = true;
     }        
 
     header("Content-type: text/xml");
@@ -34,10 +33,32 @@
     // short of a certificate driven encryption (like SSL) will...
     //
     $origKey = $_POST['key'];
-    $validated = false;
+    $validated = true;
     $validated_see = true;
     
-    if( true == $validated && isSet($_POST['action']) &&  $_POST['action'] == 'PreUploadPhoto' )
+    if( isSet($_POST['action']) &&  $_POST['action'] == 'getvalidfileslist' )
+    {
+        //
+        // If so, generate a new secure key, and pass back all of the necessary information.
+        //
+        print( "<success>\n" );
+
+        foreach( $FILE_FILTERS as $filter_name => $ext_list )
+        {
+            print( "<filter desc='" . $filter_name . "'>\n" );
+
+            foreach( $ext_list as $ext )
+            {
+                print( "<ext>" . $ext . "</ext>\n" );
+            }
+
+            print( "</filter>\n" );
+        }
+
+        print( "<newauth>" . $newKey . "</newauth>\n" );
+        print( "</success>\n" );
+    }
+    else if( true == $validated && isSet($_POST['action']) &&  $_POST['action'] == 'PreUploadPhoto' )
     {
         //
         //  This method allows you to pre-validate that the images about to be uploaded are allowable
@@ -49,30 +70,14 @@
         {
             $_SESSION['uploadReady'] = true;
             $_SESSION['uploaDirectory'] = $_POST['path'];
-            print("<success/>\n");
-        }
-    }
-    else if( true == $validated_see && isSet($_POST['action']) &&  $_POST['action'] == 'getFilters' )
-    {
-        //
-        // If so, generate a new secure key, and pass back all of the necessary information.
-        //
-        print( "<success>\n" );
-
-        foreach( $FILE_FILTERS as $filter_name => $ext_list )
-        {
-            print( "<filter name='" . $filter_name . "'>\n" );
-            
-            foreach( $ext_list as $ext )
+                                
+            if( $_SESSION['uploaDirectory'] == "/" )
             {
-                print( "<ext>" . $ext . "</ext>\n" );
+                $_SESSION['uploaDirectory'] = "";
             }
             
-            print( "</filter>\n" );
+            print("<success/>\n");
         }
-
-        print( "<newauth>" . $newKey . "</newauth>\n" );
-        print( "</success>\n" );
     }
     elseif( true == $validated && isSet($_POST['action']) &&  $_POST['action'] == 'uploadPhoto' && $_SESSION['uploadReady'] == true )
     {
@@ -122,21 +127,21 @@
             print("<status>[!CDATA[ Moved file from ".$sourceDirectory."/".$listOfFiles[$indx]." to ". $destinationDirectory."/".$listOfFiles[$indx] . "]]</status>\n");
 
             $oldumask = umask(0) ;
-            @chmod( $destinationDirectory."/".$listOfFiles[$indx], 0744 ) ;
-            umask( $oldumask ) ;
+          	@chmod( $destinationDirectory."/".$listOfFiles[$indx], 0744 ) ;
+	        umask( $oldumask ) ;
             
     
             // If the file is a zip file, we need to unzip it in the current directory, and remove the zip file.
             if( pathinfo($listOfFiles[$indx],PATHINFO_EXTENSION) == 'zip' )
             {
-                //
-                // Now, open the zip file, and extract the images. For each image, if successful, print a Javascript call to add the pic to the parent window.
-                //
-                $archive = new PclZip($destinationDirectory."/".$listOfFiles[$indx]);
-     
-                $statusList = $archive->extract( PCLZIP_OPT_PATH, 
-                                                 $destinationDirectory,
-                                                 PCLZIP_OPT_REMOVE_ALL_PATH );
+            	//
+        	    // Now, open the zip file, and extract the images. For each image, if successful, print a Javascript call to add the pic to the parent window.
+ 	            //
+		       $archive = new PclZip($destinationDirectory."/".$listOfFiles[$indx]);
+	   
+	           $statusList = $archive->extract( PCLZIP_OPT_PATH, 
+	                                            $destinationDirectory,
+                                                PCLZIP_OPT_REMOVE_ALL_PATH);
             }
             
             
