@@ -546,7 +546,7 @@ var ImageDialog = {
   },
 
   getFileList : function() {        
-    if( document.ftpappl && document.ftpappl.isActive() ) 
+    if( document.ftpappl && document.ftpappl.isActive && document.ftpappl.isActive() && document.ftpappl.setPercentCallBack ) 
     {
       document.ftpappl.setPercentCallBack( "ImageDialog._setPercent" );
       document.ftpappl.setFilePercentCallBack( "ImageDialog._setFilePercent" );
@@ -559,7 +559,7 @@ var ImageDialog = {
     } 
     else 
     {
-      document.getElementById('percent').innerHTML = "<b> java is not enabled. </b>";        
+      alert("Please enable the FTPApplet java applet.");        
     }
   },
 
