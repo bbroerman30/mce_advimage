@@ -1,14 +1,14 @@
 <?php
 
-    $ftpRoot = "/www/sites/bbroerman.net";          // Where the FTP'd files will be (full pathname) 
-    $tempUploadFolder = "/secure_images/temp";                          // Again, where they will be, but this time path relative to FTP user.
-    $tempCutPasteFolder = "/www/sites/bbroerman.net/secure_images/imagecutbuffer";          // Where files wait after cut, before paste.
-    $ImageFolder = "/www/sites/bbroerman.net/htdocs/albumimgs/mce_test"; // Full pathname for the base (root) directory of the images folder.
-    $ImageFolderHttpAddr = "/albumimgs/mce_test";                  // Relative or absolute URL of the images folder for web.
+    $ftpRoot = "FTP Account base directory";                   // Where the FTP'd files will be (full pathname) 
+    $tempUploadFolder = "Relative path to temp upload dir";    // Again, where they will be, but this time path relative to FTP user.
+    $tempCutPasteFolder = "Cut/Paste path";                    // Where files wait after cut, before paste.
+    $ImageFolder = "Full path to images base folder";          // Full pathname for the base (root) directory of the images folder.
+    $ImageFolderHttpAddr = "Relative path to image folder";    // Relative or absolute URL of the images folder for web.
     $FILE_FILTERS = Array( 'Image Files' => Array( 'png', 'jpg', 'jpeg', 'gif' ) );
         
     require_once('pclzip.lib.php');                       // used to process ZIP files.
-    require_once('/www/sites/bbroerman.net/etc/filemgr.php');   // Contains definitions for FTP user name and password... outside doc path.
+    require_once('Full path to username/password file');  // Contains definitions for FTP user name and password... outside doc path.
 
     session_start();
 
