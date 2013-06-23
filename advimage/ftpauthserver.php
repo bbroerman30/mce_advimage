@@ -2,7 +2,7 @@
 
     $ftpRoot = "/www/sites/bbroerman.net";          // Where the FTP'd files will be (full pathname) 
     $tempUploadFolder = "/secure_images/temp";                          // Again, where they will be, but this time path relative to FTP user.
-    $tempCutPasteFolder = "\tmp\imagecutbuffer";          // Where files wait after cut, before paste.
+    $tempCutPasteFolder = "/www/sites/bbroerman.net/secure_images/imagecutbuffer";          // Where files wait after cut, before paste.
     $ImageFolder = "/www/sites/bbroerman.net/htdocs/albumimgs/mce_test"; // Full pathname for the base (root) directory of the images folder.
     $ImageFolderHttpAddr = "/albumimgs/mce_test";                  // Relative or absolute URL of the images folder for web.
     $FILE_FILTERS = Array( 'Image Files' => Array( 'png', 'jpg', 'jpeg', 'gif' ) );
@@ -103,6 +103,68 @@
         print("<pass>".MCE_FTP_PASSWD."</pass>\n");
         print("<newauth>" . $newKey . "</newauth>\n");
         print("</success>\n");          
+    }
+    elseif(  true == $validated && isSet($_POST['action']) &&  $_POST['action'] == 'form_file_upload' )
+    {
+	  //
+	  // This method is called if the user has denied permission for the FTP applet to run, or has
+	  // turned off Java completely. It processes a form based file upload. Essentially combining
+	  // the PreUploadPhoto, uploadPhoto, and photoUploadDone actions. The file is in a temp
+	  // directory (put there by the PHP runtime), and you need to validate and test it here, and then
+	  // move it to the final destination. So, place any additional file checks here that you would have
+	  // put in those other methods.
+	  //
+      $newKey = generateKey( 10 );
+        
+      if( !isset( $_SESSION['uploaDirectory'] ) )
+        $_SESSION['uploaDirectory'] = "";
+        
+      $destinationDirectory = $ImageFolder . $_SESSION['uploaDirectory'];  
+      $uploadfile = $destinationDirectory . "/" . basename($_FILES['name']['name']);
+      
+      if( !pathinfo(basename($_FILES['name']['name']),PATHINFO_EXTENSION) == 'gif' &&
+          !pathinfo(basename($_FILES['name']['name']),PATHINFO_EXTENSION) == 'jpg' &&
+          !pathinfo(basename($_FILES['name']['name']),PATHINFO_EXTENSION) == 'jpeg' &&
+          !pathinfo(basename($_FILES['name']['name']),PATHINFO_EXTENSION) == 'png' &&
+          !pathinfo(basename($_FILES['name']['name']),PATHINFO_EXTENSION) == 'zip' ) {
+          
+          print("<failed>Invalid file type</failed>\n");
+          print("</response>\n");
+          return;
+      }
+      
+      if(@move_uploaded_file($_FILES['name']['tmp_name'], $uploadfile)) 
+      {
+		print("<status>[!CDATA[ Moved file from /tmp/".$_FILES['name']['tmp_name']." to ". $uploadfile . "]]</status>\n");
+		
+        $oldumask = umask(0) ;
+      	@chmod( $uploadfile, 0744 ) ;
+        umask( $oldumask ) ;
+		
+		// If the file is a zip file, we need to unzip it in the current directory, and remove the zip file.
+        if( pathinfo($uploadfile,PATHINFO_EXTENSION) == 'zip' )
+        {
+         	//
+            // Now, open the zip file, and extract the images. For each image, if successful, print a Javascript call to add the pic to the parent window.
+ 	        //
+		    $archive = new PclZip($uploadfile);
+	   
+	        $statusList = $archive->extract( PCLZIP_OPT_PATH, 
+	                                         $destinationDirectory,
+                                             PCLZIP_OPT_REMOVE_ALL_PATH);
+        }
+        
+        $_SESSION['photoAdminsecureKey'] = $newKey;
+        print("<success>\n");
+        print("<newauth>" . $newKey . "</newauth>\n");
+        print("</success>\n");
+	  } 
+	  else 
+	  {
+		print("<failed>Failed to upload file</failed>\n");
+      }
+               
+
     }
     elseif(  true == $validated && isSet($_POST['action']) &&  $_POST['action'] == 'photoUploadDone' )
     {
@@ -566,7 +628,7 @@ function printDirectoryFiles( $path = '/')
     // Now, if we're not in the root directory (i.e. path isn't '/' or '.') we show ".."
     if( $path != '/' && $path != '')
     {
-         print "$spaces <dir name='..' path='$path'/>\n";
+         print " <dir name='..' path='$path'/>\n";
     }
     
     // Now, get the list of files and directories inside this directory.      
@@ -578,7 +640,7 @@ function printDirectoryFiles( $path = '/')
     {        
         if( !in_array( $file, $ignore ) )
         {
-            $spaces = str_repeat( ' ', ( $level * 4 ) );
+            $spaces = '';//str_repeat( ' ', ( $level * 4 ) );
             if( is_dir( "${ImageFolder}$path/$file" ) )
             {                
                 print "$spaces <dir name='$file' path='$path'/>\n";

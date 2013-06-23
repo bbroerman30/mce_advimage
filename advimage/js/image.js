@@ -559,8 +559,31 @@ var ImageDialog = {
     } 
     else 
     {
-      alert("Please enable the FTPApplet java applet.");        
+    	this.fileUploadByForm();        
     }
+  },
+  
+  fileUploadByForm : function() {
+    var that = this;
+
+    // Show popup for directory name (popup will call callback to initiate a refresh).
+    tinyMCE.activeEditor.windowManager.open({
+          file : tinyMCEPopup.params.plugin_url + '/formfileupload.htm',
+          title : 'Upload a file',
+          width : 330,  // Your dimensions may differ - toy around with them!
+          height : 80,
+          resizable : "no",
+          inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
+          close_previous : "no"
+      }, {
+          refreshFn : function(response) {
+            if( "success" != response ) {
+              tinyMCE.activeEditor.windowManager.alert('File upload failed: ' + response );
+            } else {
+              that.refresh();
+            }         
+          }
+      });
   },
 
   addDirectory : function() {

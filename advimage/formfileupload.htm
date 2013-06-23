@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Upload a file</title>
+	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
+	<script type="text/javascript" src="../../utils/form_utils.js"></script>
+	<script type="text/javascript" src="../../utils/validate.js"></script>
+	<script type="text/javascript" src="js/fileupload.js"></script>
+	<base target="_self" />
+</head>
+<body id="advimage" style="display: none">
+    <form name="fileUpload" id="mce_advimage_fileUpload" method="post" action="ftpauthserver.php" enctype="multipart/form-data" target='fileUploadResponse'> 
+    <div>
+    <table class="properties">
+      <tr>
+	    <td class="column1" style='width:90px'><label id="namelabel" for="name">File:</label></td> 
+		<td colspan="2" ><input id="name" name="name" size="40" type="file" value="" style='width:280px' /></td>
+		<input type='hidden' name='action' value='form_file_upload'></input>
+		<input type='hidden' name='key' value=''></input> 
+	  </tr>
+	</table>
+    </div>
+
+	<div class="mceActionPanel">
+		<div style="float: left">
+			<input type="button" id="upload" name="upload" value="Upload" onclick="FileUploadDialog.doUpload();return false;"/>
+		</div>
+		<div style="float: right">
+			<input type="button" id="cancel" name="cancel" value="Cancel" onclick="tinyMCEPopup.close();" />
+		</div>
+	</div>
+  </form>
+  <br>    
+  <iframe name = 'fileUploadResponse' id='fileUploadResponse' style='width:0px; height:0px; border:0px; margin:0px;' onLoad='FileUploadDialog.fileUploadDone(this)'></iframe>
+</body>
+</html>
+
